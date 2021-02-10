@@ -43,19 +43,24 @@ public class Calendar {
 	}
 
 	public static void main(String[] args) {
-		// 달을 입력받아 최대 일수 출력하기
-		System.out.println("달을 입력하세요.");
-
+		System.out.println("반복횟수를 입력하세요.");
 		Scanner scan = new Scanner(System.in);
+		int repeat = scan.nextInt();
+		System.out.println();
 		Calendar cal = new Calendar();
-		int month = scan.nextInt();
-
-		if (month < 1 || month > 12) {
-			System.out.printf("%d월은 존재하지 않습니다.", month);
-		} else {
-			System.out.printf("%d월은 %d일까지 있습니다.", month, cal.getMaxDaysOfMonth(month));
+		
+		for (int i = 0; i < repeat; i++) {
+			System.out.print("월을 입력하세요. ");
+			int month = scan.nextInt();
+			if (month < 1 || month > 12) {
+				System.out.printf("%d월은 존재하지 않습니다.");
+			} else {
+				System.out.printf("%d월은 %d일까지 있습니다.", month, cal.getMaxDaysOfMonth(month));
+			}
+			System.out.println("\n");
 		}
-
+		
+		System.out.println("종료합니다.");
 		scan.close();
 	}
 }
