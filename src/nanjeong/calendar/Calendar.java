@@ -1,5 +1,9 @@
 package nanjeong.calendar;
 
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Calendar {
 	// 주어진 달이(몇 일)까지 있는 달인지 확인하는 메소드
 	private boolean isDays(int month, int[] days) {
@@ -51,7 +55,22 @@ public class Calendar {
 		return sum % 7;
 	}
 	
-	public void printCalendar(int year, int month) {
+	private boolean haveAPlan(int year, int month, int day, HashMap<String, ArrayList<String>> map) {
+		if (day < 1) {
+			return false;
+		}
+		
+		String stringYear = Integer.toString(year);
+		String stringMonth = String.format("%02d", month);
+		String stringDay = String.format("%02d", day);
+		String stringDate = String.format("%4s-%2s-%2s", stringYear, stringMonth, stringDay);
+		
+		if (map.containsKey(stringDate)) {
+			return true;
+		}
+		return false;
+	}
+	public void printCalendar(int year, int month, HashMap<String, ArrayList<String>> map) {
 		int days = getMaxDaysOfMonth(year, month);
 		
 		System.out.printf("\n    <<%4d년%3d월>>\n", year, month);
@@ -72,9 +91,55 @@ public class Calendar {
 		for (int i = 1; i <= days; i++) {
 			if ((i + space) % 7 == 0 && i != 1) {
 				System.out.println();
+				for(int j = i-7; j <= i; j++) {
+					if (haveAPlan(year, month, j, map)) {
+						System.out.printf("%3s", ".");
+					} else {
+						System.out.print("   ");
+					}
+				}
+				System.out.println();	
 			}
 			System.out.printf("%3d", i);
 		}
+		System.out.println("\n");
 	}
 	
+	final String PROMPT = "> ";
+	
+	public String inputDate() {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("날짜를 입력하세요.");
+		System.out.print(PROMPT);
+		String date = scan.next();
+		
+		return date;
+	}
+	
+	public String inputPlan() {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("일정을 입력하세요.");
+		System.out.print(PROMPT);
+		String plan = scan.next();
+		
+		return plan;
+	}
+	
+	public void searchPlan(HashMap<String, ArrayList<String>> map, String date) {
+		int count = map.get(date).size();
+		System.out.printf("%d개의 일정이 있습니다.\n", count);
+		for (int i = 0; i < count; i++) {
+			System.out.printf("%d. %s\n", i + 1, map.get(date).get(i));
+		}
+		
+	}
+	
+	public void help() {
+		System.out.println("+--------------------+");
+		System.out.println("| 1. 일정 등록");
+		System.out.println("| 2. 일정 검색");
+		System.out.println("| 3. 달력 보기");
+		System.out.println("| h. 도움말 q. 종료");
+		System.out.println("+--------------------+");
+	}
 }
