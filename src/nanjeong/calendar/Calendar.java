@@ -23,7 +23,7 @@ public class Calendar {
 			return false;
 		}
 	}
-	// 주어진 달이 최대 몇 일까지 있는지 판단하는 메소드
+	// 주어진 달이 몇 일까지 있는지 판단하는 메소드
 	private int getMaxDaysOfMonth(int year, int month) {
 		int[] days31 = { 1, 3, 5, 7, 8, 10, 12 };
 		int[] days30 = { 4, 6, 9, 11 };
@@ -60,12 +60,8 @@ public class Calendar {
 			return false;
 		}
 		
-		String stringYear = Integer.toString(year);
-		String stringMonth = String.format("%02d", month);
-		String stringDay = String.format("%02d", day);
-		String stringDate = String.format("%4s-%2s-%2s", stringYear, stringMonth, stringDay);
-		
-		if (map.containsKey(stringDate)) {
+		String date = String.format("%04d-%02d-%02d", year, month, day);
+		if (map.containsKey(date)) {
 			return true;
 		}
 		return false;
@@ -91,7 +87,7 @@ public class Calendar {
 		for (int i = 1; i <= days; i++) {
 			if ((i + space) % 7 == 0 && i != 1) {
 				System.out.println();
-				for(int j = i-7; j <= i; j++) {
+				for(int j = i-7; j < i; j++) {
 					if (haveAPlan(year, month, j, map)) {
 						System.out.printf("%3s", ".");
 					} else {
@@ -110,8 +106,14 @@ public class Calendar {
 	public String inputDate() {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("날짜를 입력하세요.");
-		System.out.print(PROMPT);
-		String date = scan.next();
+		System.out.print("YEAR> ");
+		int year = scan.nextInt();
+		System.out.print("MONTH> ");
+		int month = scan.nextInt();
+		System.out.print("DAY> ");
+		int day = scan.nextInt();
+		
+		String date = String.format("%4d-%02d-%02d", year, month, day);
 		
 		return date;
 	}
@@ -120,7 +122,7 @@ public class Calendar {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("일정을 입력하세요.");
 		System.out.print(PROMPT);
-		String plan = scan.next();
+		String plan = scan.nextLine();
 		
 		return plan;
 	}
@@ -138,8 +140,23 @@ public class Calendar {
 		System.out.println("+--------------------+");
 		System.out.println("| 1. 일정 등록");
 		System.out.println("| 2. 일정 검색");
-		System.out.println("| 3. 달력 보기");
+		System.out.println("| 3. 일정 취소");
+		System.out.println("| 4. 달력 보기");
 		System.out.println("| h. 도움말 q. 종료");
 		System.out.println("+--------------------+");
+	}
+	
+	public boolean isRightDate(String date) {
+		String[] splitedDate = date.split("-");
+		int year = Integer.parseInt(splitedDate[0]);
+		int month = Integer.parseInt(splitedDate[1]);
+		int day = Integer.parseInt(splitedDate[2]);
+		int maxDay = getMaxDaysOfMonth(year, month);
+		
+		if (year < 1 || month < 1 || month > 12 || day < 1 || day > maxDay) {
+			return false;
+		}
+		
+		return true;
 	}
 }
