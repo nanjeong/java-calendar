@@ -7,8 +7,8 @@ public class Prompt {
 	public void runPrompt() {
 		Scanner scan = new Scanner(System.in);
 		String cmd;
-		Calendar cal = new Calendar();
-		cal.help();
+		PlanItem planItem = new PlanItem();
+		planItem.help();
 
 		while (true) {
 			System.out.println("\n명령 (1, 2, 3, 4, h, q)");
@@ -20,19 +20,19 @@ public class Prompt {
 
 			switch (cmd) {
 			case "1":
-				cal.registPlan(scan);
+				planItem.registPlan(scan);
 				break;
 			case "2":
-				cal.searchPlan(scan);
+				planItem.searchPlan(scan);
 				break;
 			case "3":
-				cal.cancelPlan(scan);
+				planItem.cancelPlan(scan);
 				break;
 			case "4":
-				cal.printCalendar(scan);
+				planItem.printCalendar(scan);
 				break;
 			case "h":
-				cal.help();
+				planItem.help();
 				break;
 			default:
 				System.out.println("잘못된 입력입니다.");
