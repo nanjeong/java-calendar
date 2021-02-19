@@ -8,6 +8,7 @@ public class Prompt {
 		Scanner scan = new Scanner(System.in);
 		String cmd;
 		PlanItem planItem = new PlanItem();
+		planItem.initPlanMap();
 		planItem.help();
 
 		while (true) {

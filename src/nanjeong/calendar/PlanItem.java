@@ -1,13 +1,45 @@
 package nanjeong.calendar;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 public class PlanItem extends Calendar{
 	HashMap<LocalDate, ArrayList<String>> planMap = new HashMap<LocalDate, ArrayList<String>>();
+	
+	public void initPlanMap() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		
+		try {
+			BufferedReader planFile = new BufferedReader(new FileReader("c:/thisisjava/workspace/calendar/plan.txt"));
+			while (true) {
+				String strDate = planFile.readLine();
+				if (strDate == null || strDate == "") break;
+				String plan = planFile.readLine();
+				
+				LocalDate date = LocalDate.parse(strDate, formatter);
+				
+				if (planMap.containsKey(date)) {
+					planMap.get(date).add(plan);
+				} else {
+					ArrayList<String> planList = new ArrayList<String>();
+					planList.add(plan);
+					planMap.put(date, planList);
+				}
+			}
+			planFile.close();
+		} catch (IOException e) {
+			System.out.println("파일을 읽어오는데 오류가 발생했습니다.");
+		}
+	}
 	
 	public int inputYear(Scanner scan) {
 		int year = 0;
@@ -71,13 +103,14 @@ public class PlanItem extends Calendar{
 		return String.format("%04d-%02d-%02d", year, month, day);
 	}
 	
-	public void registPlan(Scanner scan) {
+	public void registPlan(Scanner scan){
 		System.out.println("[일정 등록]");
 		
 		String strDate = inputDate(scan);
 		if ("".equals(strDate)) return;
 		LocalDate date = LocalDate.parse(strDate);
 		String plan = inputPlan(scan);
+		updateFile(strDate, plan);
 		
 		if (planMap.containsKey(date)) {
 			planMap.get(date).add(plan);
@@ -88,6 +121,20 @@ public class PlanItem extends Calendar{
 		}
 		
 		System.out.println("일정이 등록되었습니다.");
+	}
+	
+	private void updateFile(String strDate, String strPlan) {
+		try {
+			FileWriter planWrite = new FileWriter("c:/thisisjava/workspace/calendar/plan.txt", true);
+			String date = strDate + "\r\n";
+			planWrite.write(date);
+			String plan = strPlan + "\r\n";
+			planWrite.write(plan);
+			
+			planWrite.close();
+		} catch (IOException e) {
+			System.out.println("파일에 작성하는데 오류가 발생했습니다.");
+		}
 	}
 	
 	private String inputPlan(Scanner scan) {
@@ -205,6 +252,7 @@ public class PlanItem extends Calendar{
 		}
 		System.out.println("\n");
 	}
+	
 	public void help() {
 		System.out.println("+--------------------+");
 		System.out.println("| 1. 일정 등록");
@@ -214,4 +262,6 @@ public class PlanItem extends Calendar{
 		System.out.println("| h. 도움말 q. 종료");
 		System.out.println("+--------------------+");
 	}
+	
+	
 }
