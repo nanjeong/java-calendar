@@ -39,6 +39,8 @@ public class Prompt {
 				System.out.println("잘못된 입력입니다.");
 			}
 		}
+		
+		planItem.updateFile();
 		System.out.println("\n종료합니다.");
 		scan.close();
 	}

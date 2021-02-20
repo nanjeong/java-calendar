@@ -5,11 +5,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 
 public class PlanItem extends Calendar{
@@ -22,7 +24,7 @@ public class PlanItem extends Calendar{
 			BufferedReader planFile = new BufferedReader(new FileReader("c:/thisisjava/workspace/calendar/plan.txt"));
 			while (true) {
 				String strDate = planFile.readLine();
-				if (strDate == null || strDate == "") break;
+				if (strDate == null) break;
 				String plan = planFile.readLine();
 				
 				LocalDate date = LocalDate.parse(strDate, formatter);
@@ -200,7 +202,7 @@ public class PlanItem extends Calendar{
 		}
 		
 	}
-
+	
 	private boolean haveAPlan(int year, int month, int day) {
 		if (day < 1) return false;
 		
@@ -263,5 +265,27 @@ public class PlanItem extends Calendar{
 		System.out.println("+--------------------+");
 	}
 	
-	
+	public void updateFile() {
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter("c:/thisisjava/workspace/calendar/plan.txt"));
+			
+			Iterator<HashMap.Entry<LocalDate, ArrayList<String>>> iteratorE = planMap.entrySet().iterator();
+			while (iteratorE.hasNext()) {
+				HashMap.Entry<LocalDate, ArrayList<String>> entry = (HashMap.Entry<LocalDate, ArrayList<String>>) iteratorE.next();
+				LocalDate date = entry.getKey();
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				String strDate = date.format(formatter);
+				ArrayList<String> plan = entry.getValue();
+				for (String strPlan : plan) {
+					bw.write(strDate);
+					bw.newLine();
+					bw.write(strPlan);
+					bw.newLine();
+				}
+			}
+			bw.close();
+		} catch (IOException e) {
+			System.out.println("파일을 작성하는데 오류가 발생했습니다.");
+		}
+	}
 }
